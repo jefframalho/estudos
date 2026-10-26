@@ -1,0 +1,16 @@
+{
+  "name": "estudos",
+  "version": "1.0.0",
+  "description": "Estudos: tempo, revisões, exercícios com IA, físico e agenda",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.seunome.estudos",
+    "productName": "Estudos",
+    "files": ["main.js", "index.html", "icon.ico"],
+    "win": { "target": "nsis", "icon": "icon.ico" }
+  }
+}

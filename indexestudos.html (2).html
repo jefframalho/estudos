@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d3fbb">
+<title>Estudos</title>
+<style>
+:root{--bg:#f6f8fc;--card:#fff;--ink:#1b1f2a;--mut:#667;--pri:#1d3fbb;--hl:#ffe45c;--ok:#12805c;--line:#dde3ee;--grid:rgba(29,63,187,.06)}
+@media(prefers-color-scheme:dark){:root{--bg:#10141f;--card:#181e2d;--ink:#eef1f8;--mut:#9aa4bd;--pri:#7f9bff;--hl:#ffe45c;--ok:#4cd6a0;--line:#262e45;--grid:rgba(127,155,255,.07)}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.45 "Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;padding-bottom:84px}
+main{max-width:720px;margin:auto;padding:16px;padding-top:calc(16px + env(safe-area-inset-top))}
+h1{font-size:28px;margin:0 0 2px;letter-spacing:-.5px}
+h1 b{background:linear-gradient(transparent 55%,var(--hl) 55%);padding:0 4px}
+h2{font-size:18px;margin:20px 0 8px}
+.sub{color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+input,select,textarea,button{font:inherit;color:inherit}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);margin:4px 0}
+button{border:0;border-radius:10px;padding:10px 14px;background:var(--pri);color:#fff;font-weight:600;cursor:pointer}
+button.g{background:transparent;color:var(--pri);border:1px solid var(--line)}
+button.s{padding:6px 10px;font-size:14px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--hl)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}
+.time{font:700 56px/1 ui-monospace,Consolas,monospace;text-align:center;margin:10px 0}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}.item small{color:var(--mut)}
+.done{color:var(--ok)}.bar{display:flex;gap:6px;align-items:flex-end;height:80px}
+.bar div{flex:1;background:var(--pri);border-radius:5px 5px 0 0;min-height:3px;position:relative}
+.bar span{position:absolute;top:100%;left:0;right:0;text-align:center;font-size:11px;color:var(--mut);margin-top:2px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;color:var(--mut);border-radius:0;padding:12px 2px;font-size:11px}
+nav button.on{color:var(--pri);box-shadow:inset 0 3px var(--pri)}
+nav i{display:block;font-style:normal;font-size:20px}
+pre{white-space:pre-wrap;font:inherit;margin:0}
+.empty{color:var(--mut);text-align:center;padding:12px}
+section{display:none}section.on{display:block}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}
+.pb{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:4px 0}.pb>i{display:block;height:100%}
+input[type=color]{padding:2px;height:42px}
+.leg{display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:3px 0}
+.dn{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}.dn>div{flex:1;min-width:150px}
+</style>
+</head>
+<body>
+<main>
+<h1><b>Estudos</b></h1>
+<p class="sub" id="hoje"></p>
+
+<section id="t-hoje" class="on">
+  <div class="card">
+    <select id="selTopico" aria-label="Tópico"></select>
+    <div class="time" id="clock">00:00:00</div>
+    <div class="row"><button id="bStart">Iniciar</button><button class="g" id="bStop">Salvar sessão</button></div>
+  </div>
+  <div class="card"><div class="row"><div><b id="stHoje">0 min</b><br><small>hoje</small></div><div><b id="stSem">0 min</b><br><small>nesta semana</small></div><div><b id="stRev">0</b><br><small>revisões pendentes</small></div></div>
+  <label><small>Meta diária (min)</small><input id="meta" type="number" min="0"></label>
+  <div class="bar" id="graf" style="margin-bottom:22px"></div></div>
+  <h2>Agenda de hoje</h2><div class="card" id="agHoje"></div>
+</section>
+
+<section id="t-plano">
+  <h2>Matérias e tópicos</h2>
+  <div class="card"><b>Cadastrar disciplina</b>
+    <input id="nMat" placeholder="Nome (ex.: Python)">
+    <div class="row"><label><small>Cor</small><input id="nCor" type="color" value="#1d3fbb"></label><label><small>Meta semanal (horas)</small><input id="nMeta" type="number" min="0" value="3"></label><label><small>Prioridade</small><select id="nPri"><option>Alta</option><option selected>Média</option><option>Baixa</option></select></label></div>
+    <button id="addMat" style="width:100%;margin-top:6px">Adicionar disciplina</button></div>
+  <div id="listaPlano"></div>
+</section>
+
+<section id="t-graf">
+  <h2>Desempenho por disciplina</h2>
+  <select id="gPer" aria-label="Período"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="0">Todo o período</option></select>
+  <h2>Tempo por disciplina</h2><div class="card" id="gDonut"></div>
+  <h2>Mais estudadas</h2><div class="card" id="gRank"></div>
+  <h2>O que falta estudar</h2><div class="card" id="gFalta"></div>
+</section>
+
+<section id="t-rev">
+  <h2>Revisões de hoje</h2>
+  <p class="sub">Ao concluir um tópico, as revisões são agendadas em 1, 3, 7, 15 e 30 dias.</p>
+  <div class="card" id="listaRev"></div>
+  <h2>Já estudei</h2><div class="card" id="listaFeitos"></div>
+</section>
+
+<section id="t-ia">
+  <h2>Exercícios com IA</h2>
+  <div class="card">
+    <select id="iaTopico"></select>
+    <div class="row"><select id="iaTipo"><option>múltipla escolha</option><option>dissertativas</option><option>verdadeiro ou falso</option><option>problemas práticos</option></select>
+    <select id="iaNivel"><option>iniciante</option><option selected>intermediário</option><option>avançado</option></select>
+    <input id="iaQtd" type="number" value="5" min="1" max="15"></div>
+    <button id="iaGo" style="width:100%;margin-top:6px">Gerar exercícios</button>
+  </div>
+  <div class="card"><pre id="iaOut">Escolha um tópico e gere exercícios. Gabarito vem no final.</pre></div>
+  <h2>Chave da API</h2>
+  <div class="card"><input id="apiKey" type="password" placeholder="Chave da API Anthropic (sk-ant-...)" autocomplete="off"><small>Fica salva só neste aparelho.</small></div>
+</section>
+
+<section id="t-fis">
+  <h2>Atividade física</h2>
+  <div class="card"><div class="row"><select id="fTipo"><option>Caminhada</option><option>Corrida</option><option>Musculação</option><option>Bicicleta</option><option>Alongamento</option><option>Outro</option></select><input id="fMin" type="number" placeholder="min"><button id="addFis" class="s" style="flex:0">Registrar</button></div></div>
+  <div class="card" id="listaFis"></div>
+</section>
+
+<section id="t-ag">
+  <h2>Agenda</h2>
+  <div class="card"><input id="aTit" placeholder="Compromisso (prova, treino, revisão...)"><div class="row"><input id="aData" type="date"><input id="aHora" type="time"></div><button id="addAg" style="width:100%;margin-top:6px">Adicionar</button></div>
+  <div class="card" id="listaAg"></div>
+</section>
+</main>
+
+<nav id="nav">
+  <button data-t="hoje" class="on"><i>⏱</i>Hoje</button>
+  <button data-t="plano"><i>📚</i>Plano</button>
+  <button data-t="graf"><i>📊</i>Gráficos</button>
+  <button data-t="rev"><i>🔁</i>Revisões</button>
+  <button data-t="ia"><i>✨</i>IA</button>
+  <button data-t="fis"><i>🏃</i>Físico</button>
+  <button data-t="ag"><i>📅</i>Agenda</button>
+</nav>
+
+<script>
+const $=s=>document.querySelector(s);
+const KEY='estudos.v1';
+let S={mats:[],tops:[],sess:[],ag:[],fis:[],meta:120,key:''};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const iso=d=>{const x=new Date(d);return new Date(x.getTime()-x.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const hoje=()=>iso(new Date());
+const addDias=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return iso(x)};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtD=d=>d.split('-').reverse().slice(0,2).join('/');
+const INT=[1,3,7,15,30];
+
+// navegação
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+ document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+ document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id==='t-'+b.dataset.t));render()};
+
+// cronômetro (baseado em data, não perde tempo em segundo plano)
+let t0=null,acum=0,tick=null;
+const pad=n=>String(n).padStart(2,'0');
+function elapsed(){return acum+(t0?Date.now()-t0:0)}
+function paint(){const s=Math.floor(elapsed()/1e3);$('#clock').textContent=pad(s/3600|0)+':'+pad(s/60%60|0)+':'+pad(s%60)}
+$('#bStart').onclick=()=>{
+ if(t0){acum+=Date.now()-t0;t0=null;clearInterval(tick);$('#bStart').textContent='Continuar'}
+ else{t0=Date.now();tick=setInterval(paint,500);$('#bStart').textContent='Pausar'}};
+$('#bStop').onclick=()=>{
+ const min=Math.round(elapsed()/6e4);
+ if(min<1){alert('Estude pelo menos 1 minuto para salvar.');return}
+ S.sess.push({d:hoje(),min,top:$('#selTopico').value});save();
+ t0=null;acum=0;clearInterval(tick);paint();$('#bStart').textContent='Iniciar';render()};
+
+// plano
+$('#addMat').onclick=()=>{const n=$('#nMat').value.trim();if(!n)return;S.mats.push({id:uid(),n,c:$('#nCor').value,meta:+$('#nMeta').value||0,pri:$('#nPri').value});$('#nMat').value='';save();render()};
+function addTop(mid){const i=document.getElementById('nt-'+mid);const n=i.value.trim();if(!n)return;S.tops.push({id:uid(),m:mid,n,done:null,idx:0,next:null});save();render()}
+function toggleTop(id){const t=S.tops.find(x=>x.id===id);
+ if(t.done){t.done=null;t.next=null;t.idx=0}else{t.done=hoje();t.idx=0;t.next=addDias(hoje(),INT[0])}
+ save();render()}
+function delTop(id){S.tops=S.tops.filter(x=>x.id!==id);save();render()}
+function delMat(id){if(!confirm('Apagar matéria e seus tópicos?'))return;S.mats=S.mats.filter(m=>m.id!==id);S.tops=S.tops.filter(t=>t.m!==id);save();render()}
+function revisei(id){const t=S.tops.find(x=>x.id===id);t.idx++;t.next=t.idx<INT.length?addDias(hoje(),INT[t.idx]-INT[t.idx-1]):null;save();render()}
+
+// físico e agenda
+$('#addFis').onclick=()=>{const m=+$('#fMin').value;if(!m)return;S.fis.push({d:hoje(),t:$('#fTipo').value,min:m});$('#fMin').value='';save();render()};
+$('#addAg').onclick=()=>{const t=$('#aTit').value.trim(),d=$('#aData').value;if(!t||!d)return;S.ag.push({id:uid(),t,d,h:$('#aHora').value});$('#aTit').value='';save();render()};
+function delAg(id){S.ag=S.ag.filter(a=>a.id!==id);save();render()}
+$('#meta').onchange=e=>{S.meta=+e.target.value||0;save();render()};
+$('#apiKey').onchange=e=>{S.key=e.target.value.trim();save()};
+
+// IA
+$('#iaGo').onclick=async()=>{
+ const tp=S.tops.find(t=>t.id===$('#iaTopico').value);
+ if(!tp){$('#iaOut').textContent='Cadastre um tópico na aba Plano primeiro.';return}
+ if(!S.key){$('#iaOut').textContent='Cole sua chave da API abaixo.';return}
+ const mat=S.mats.find(m=>m.id===tp.m);
+ $('#iaOut').textContent='Gerando...';
+ const prompt=`Crie ${$('#iaQtd').value} exercícios (${$('#iaTipo').value}), nível ${$('#iaNivel').value}, sobre "${tp.n}" (matéria: ${mat?mat.n:''}). Escreva em português do Brasil. Numere as questões e coloque o gabarito comentado no final.`;
+ try{
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':S.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+   body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+  const j=await r.json();
+  $('#iaOut').textContent=j.content?j.content.map(c=>c.text||'').join(''):('Erro: '+(j.error&&j.error.message||'resposta inválida'));
+ }catch(e){$('#iaOut').textContent='Sem conexão ou chave inválida. Confira a internet e a chave.'}};
+
+// gráficos
+const col=m=>m.c||'#1d3fbb';
+let PER=30;
+$('#gPer').onchange=e=>{PER=+e.target.value;renderGraf()};
+const fmtMin=m=>m>=60?(m/60|0)+'h'+pad(m%60):m+' min';
+function matMin(n){
+ const ini=n?addDias(hoje(),-(n-1)):'0000-00-00',r={};
+ S.mats.forEach(m=>r[m.id]=0);
+ S.sess.forEach(s=>{if(s.d<ini)return;const t=S.tops.find(x=>x.id===s.top);if(t&&t.m in r)r[t.m]+=s.min});
+ return r}
+function renderGraf(){
+ if(!S.mats.length){['#gDonut','#gRank','#gFalta'].forEach(i=>$(i).innerHTML='<div class="empty">Cadastre disciplinas na aba Plano.</div>');return}
+ const r=matMin(PER),lista=S.mats.map(m=>({m,min:r[m.id]})).sort((a,b)=>b.min-a.min);
+ const tot=lista.reduce((a,x)=>a+x.min,0),mx=Math.max(lista[0].min,1);
+ const R=60,C=2*Math.PI*R;let ang=0,arcs='';
+ lista.filter(x=>x.min>0).forEach(x=>{const len=x.min/tot*C;arcs+=`<circle r="${R}" cx="80" cy="80" fill="none" stroke="${col(x.m)}" stroke-width="26" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-ang}" transform="rotate(-90 80 80)"/>`;ang+=len});
+ if(!tot)arcs=`<circle r="${R}" cx="80" cy="80" fill="none" stroke="var(--line)" stroke-width="26"/>`;
+ $('#gDonut').innerHTML=`<div class="dn"><svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Tempo por disciplina">${arcs}<text x="80" y="82" text-anchor="middle" font-size="20" font-weight="700" fill="currentColor">${fmtMin(tot)}</text><text x="80" y="100" text-anchor="middle" font-size="11" fill="#889">estudados</text></svg><div>${lista.map(x=>`<div class="leg"><span><i class="dot" style="background:${col(x.m)}"></i>${esc(x.m.n)}</span><b>${tot?Math.round(x.min/tot*100):0}%</b></div>`).join('')}</div></div>`;
+ $('#gRank').innerHTML=lista.map((x,i)=>`<div style="margin-bottom:10px"><div class="leg"><b>${i+1}º ${esc(x.m.n)}</b><span>${fmtMin(x.min)}</span></div><div class="pb"><i style="width:${x.min/mx*100}%;background:${col(x.m)}"></i></div></div>`).join('');
+ const w=matMin(7),rk={Alta:0,'Média':1,Baixa:2};
+ const menos=lista.filter(x=>S.tops.some(t=>t.m===x.m.id&&!t.done)).pop();
+ $('#gFalta').innerHTML=(menos&&tot?`<p class="sub">Menos estudada no período: <b>${esc(menos.m.n)}</b> (${fmtMin(menos.min)}), com tópicos pendentes.</p>`:'')+
+ [...S.mats].sort((a,b)=>(rk[a.pri]??1)-(rk[b.pri]??1)).map(m=>{
+  const ts=S.tops.filter(t=>t.m===m.id),ok=ts.filter(t=>t.done).length,pend=ts.filter(t=>!t.done),pct=ts.length?Math.round(ok/ts.length*100):0,mm=(m.meta||0)*60;
+  const meta=mm?`<small>Meta da semana: ${fmtMin(w[m.id])} de ${fmtMin(mm)}${w[m.id]>=mm?' · batida ✓':' · faltam '+fmtMin(mm-w[m.id])}</small><br>`:'';
+  return `<div style="margin-bottom:14px"><div class="leg"><b><i class="dot" style="background:${col(m)}"></i>${esc(m.n)}</b><span>${ok}/${ts.length} tópicos · ${pct}%</span></div><div class="pb"><i style="width:${pct}%;background:${col(m)}"></i></div>${meta}${pend.length?`<small>Falta: ${pend.slice(0,3).map(t=>esc(t.n)).join(', ')}${pend.length>3?' +'+(pend.length-3):''}</small>`:'<small>Nenhum tópico pendente.</small>'}</div>`}).join('')}
+// render
+function opts(sel,val){const arr=S.tops.map(t=>{const m=S.mats.find(x=>x.id===t.m);return `<option value="${t.id}">${esc((m?m.n+' · ':'')+t.n)}</option>`});
+ const el=$(sel),old=el.value;el.innerHTML=arr.join('')||'<option value="">Sem tópicos (crie no Plano)</option>';if(old)el.value=old}
+function render(){renderGraf();
+ $('#hoje').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+ opts('#selTopico');opts('#iaTopico');
+ const h=hoje();const min=d=>S.sess.filter(s=>s.d===d).reduce((a,s)=>a+s.min,0);
+ const dias=[...Array(7)].map((_,i)=>addDias(h,i-6));
+ const tot=dias.map(min),mx=Math.max(S.meta,...tot,1);
+ $('#stHoje').textContent=tot[6]+' min'+(S.meta?' / '+S.meta:'');
+ $('#stSem').textContent=tot.reduce((a,b)=>a+b,0)+' min';
+ $('#meta').value=S.meta;$('#apiKey').value=S.key;
+ $('#graf').innerHTML=dias.map((d,i)=>`<div style="height:${tot[i]/mx*100}%" title="${tot[i]} min"><span>${['D','S','T','Q','Q','S','S'][new Date(d+'T12:00:00').getDay()]}</span></div>`).join('');
+ const pend=S.tops.filter(t=>t.next&&t.next<=h);$('#stRev').textContent=pend.length;
+ const agH=S.ag.filter(a=>a.d===h).sort((a,b)=>(a.h||'').localeCompare(b.h||''));
+ $('#agHoje').innerHTML=agH.map(a=>`<div class="item"><span>${esc(a.h||'')} ${esc(a.t)}</span></div>`).join('')||'<div class="empty">Nada marcado para hoje.</div>';
+ // plano
+ $('#listaPlano').innerHTML=S.mats.map(m=>{const ts=S.tops.filter(t=>t.m===m.id);
+  return `<div class="card"><div class="item"><span><i class="dot" style="background:${col(m)}"></i><b>${esc(m.n)}</b><br><small>Prioridade ${esc(m.pri||'Média')}${m.meta?' · meta '+m.meta+' h/sem':''}</small></span><button class="g s" onclick="delMat('${m.id}')">Apagar</button></div>`+
+  ts.map(t=>`<div class="item"><span class="${t.done?'done':''}">${t.done?'✓ ':''}${esc(t.n)}</span><span><button class="g s" onclick="toggleTop('${t.id}')">${t.done?'Reabrir':'Concluir'}</button> <button class="g s" onclick="delTop('${t.id}')">×</button></span></div>`).join('')+
+  `<div class="row" style="margin-top:8px"><input id="nt-${m.id}" placeholder="Novo tópico"><button class="s" style="flex:0" onclick="addTop('${m.id}')">+</button></div></div>`}).join('')||'<div class="empty">Crie sua primeira matéria acima.</div>';
+ // revisões
+ $('#listaRev').innerHTML=pend.map(t=>{const m=S.mats.find(x=>x.id===t.m);return `<div class="item"><span>${esc(t.n)}<br><small>${esc(m?m.n:'')} · revisão ${t.idx+1} de ${INT.length}</small></span><button class="s" onclick="revisei('${t.id}')">Revisei</button></div>`}).join('')||'<div class="empty">Nenhuma revisão pendente.</div>';
+ $('#listaFeitos').innerHTML=S.tops.filter(t=>t.done).map(t=>`<div class="item"><span>${esc(t.n)}</span><small>${t.next?'próxima: '+fmtD(t.next):'ciclo completo'}</small></div>`).join('')||'<div class="empty">Conclua tópicos no Plano.</div>';
+ // físico
+ $('#listaFis').innerHTML=[...S.fis].reverse().slice(0,30).map(f=>`<div class="item"><span>${esc(f.t)}</span><small>${fmtD(f.d)} · ${f.min} min</small></div>`).join('')||'<div class="empty">Registre sua primeira atividade.</div>';
+ // agenda
+ $('#listaAg').innerHTML=[...S.ag].filter(a=>a.d>=h).sort((a,b)=>(a.d+(a.h||'')).localeCompare(b.d+(b.h||''))).map(a=>`<div class="item"><span>${esc(a.t)}<br><small>${fmtD(a.d)} ${esc(a.h||'')}</small></span><button class="g s" onclick="delAg('${a.id}')">×</button></div>`).join('')||'<div class="empty">Sem compromissos futuros.</div>';
+}
+render();paint();
+</script>
+</body>
+</html>
